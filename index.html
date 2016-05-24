@@ -5,7 +5,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>^_^</title>
-  <link rel="stylesheet" href="main.css">
+  <style>
+    body {
+      color: #ccc;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Verdana, sans-serif;
+      background-color: #000;
+    }
+
+    div {
+      position: relative;
+    }
+  </style>
   <script src="phaser.min.js"></script>
 </head>
 <body>
@@ -18,21 +30,21 @@
 
   var game = new Phaser.Game(display.width, display.height, Phaser.CANVAS, "display", { render: render });
   var ttl = 5;
-  var ps = [];
+  var particles = [];
 
   function render() {
-    if (ps.length < 100 && Math.random() < 0.3)
-      ps.push(particle());
-    for (var p of ps)
+    if (particles.length < 100 && Math.random() < 0.3)
+      particles.push(particle());
+    for (var p of particles)
       draw(p);
   }
 
-  function reset(p) {
-    p.start = game.time.totalElapsedSeconds();
-    p.h = Math.random() * 60;
-    p.xSide = Math.random() >= 0.5 ? 1 : -1;
-    p.xOffset = Math.random() * display.width / 3;
-    p.green = Math.random() * 32 + 128;
+  function reset(particle) {
+    particle.start = game.time.totalElapsedSeconds();
+    particle.hue = Math.random() * 60;
+    particle.xSide = Math.random() >= 0.5 ? 1 : -1;
+    particle.xOffset = Math.random() * display.width / 3;
+    particle.green = Math.random() * 32 + 128;
   }
 
   function draw(particle) {
@@ -47,18 +59,15 @@
     var x = (Math.atan(t) + Math.PI / 2) / Math.PI;
     particle.p.x = game.world.centerX + x * particle.xSide * particle.xOffset;
 
-    var col;
-    var c;
+    var color;
     if (time < 0.3)
-      col = particle.green;
+      color = particle.green;
     else if (time < 0.4) {
-      c = (time - 0.3) / 0.1;
-      col = 128 + (particle.h - 128) * c;
+      var k = (time - 0.3) / 0.1;
+      color = 128 + (particle.hue - 128) * k;
     } else
-      col = particle.h;
-    var color = "hsl(" + (col|0) + ", 100%, 50%)";
-    console.log(color);
-    game.debug.geom(particle.p, color);
+      color = particle.hue;
+    game.debug.geom(particle.p, "hsl(" + (color|0) + ", 100%, 50%)");
   }
 
   function particle() {
