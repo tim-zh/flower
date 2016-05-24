@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>^_^</title>
+  <link rel="stylesheet" href="main.css">
+  <script src="phaser.js"></script>
+</head>
+<body>
+<div id="display"></div>
+<script>
+  var display = document.getElementById("display");
+  display.width = window.innerWidth;
+  display.height = window.innerHeight;
+
+  var game = new Phaser.Game(display.width, display.height, Phaser.CANVAS, "display", { create: create, render: render });
+  var ttl = 2;
+  var ps = [];
+  function create() {
+  }
+
+  function render () {
+    if (ps.length < 400 && Math.random() < 0.3) {
+      ps.push(particle());
+      ps.push(particle());
+    }
+    for (var p of ps) {
+      p.draw();
+    }
+  }
+
+  function particle() {
+    function defaults(p) {
+      p.start = game.time.totalElapsedSeconds();
+      p.h = Math.random() * 64;
+      p.xSide = Math.random() >= 0.5 ? 1 : -1;
+      p.xOffset = Math.random() * display.width / 4 + display.width / 60;
+    }
+    var particle = {
+      p: new Phaser.Circle(game.world.centerX, display.height, Math.random() * 16 + 64)
+    };
+    defaults(particle);
+    particle.draw = function () {
+      var time = (game.time.totalElapsedSeconds() - particle.start) / ttl;
+      if (time >= 1) {
+        defaults(particle);
+        return;
+      }
+      particle.p.y = display.height * (1 - time);
+
+      var t = (time * 2 - 1) * 6;
+      var x = (Math.atan(t) + Math.PI / 2) / Math.PI;
+      particle.p.x = game.world.centerX + x * particle.xSide * particle.xOffset;
+
+      var col;
+      var c;
+      if (time < 0.3) {
+        col = 128;
+      } else if (time < 0.4) {
+        c = (time - 0.3) / 0.1;
+        col = 128 + (particle.h - 128) * c;
+      } else {
+        col = particle.h;
+      } /*else {
+        c = (time - 0.9) / 0.1;
+        col = particle.h + (255 - particle.h) * c;
+      }*/
+      //var color = "rgba("+(red|0)+","+(green|0)+","+(blue|0)+",1)";
+      var color = "hsl("+(col|0)+",100%,50%)";
+      console.log(color);
+      game.debug.geom(particle.p, color);
+    };
+    return particle;
+  }
+</script>
+</body>
+</html>
