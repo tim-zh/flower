@@ -12,7 +12,8 @@
 <div id="display"></div>
 <script>
   var display = document.getElementById("display");
-  display.width = window.innerWidth;
+  display.style.marginLeft = window.innerWidth * 0.1 + "px";
+  display.width = window.innerWidth * 0.8;
   display.height = window.innerHeight;
 
   var game = new Phaser.Game(display.width, display.height, Phaser.CANVAS, "display", { render: render });
@@ -28,9 +29,10 @@
 
   function reset(p) {
     p.start = game.time.totalElapsedSeconds();
-    p.h = Math.random() * 64;
+    p.h = Math.random() * 60;
     p.xSide = Math.random() >= 0.5 ? 1 : -1;
     p.xOffset = Math.random() * display.width / 3;
+    p.green = Math.random() * 32 + 128;
   }
 
   function draw(particle) {
@@ -48,7 +50,7 @@
     var col;
     var c;
     if (time < 0.3)
-      col = 128;
+      col = particle.green;
     else if (time < 0.4) {
       c = (time - 0.3) / 0.1;
       col = 128 + (particle.h - 128) * c;
