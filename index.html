@@ -63,11 +63,7 @@
         col = 128 + (particle.h - 128) * c;
       } else {
         col = particle.h;
-      } /*else {
-        c = (time - 0.9) / 0.1;
-        col = particle.h + (255 - particle.h) * c;
-      }*/
-      //var color = "rgba("+(red|0)+","+(green|0)+","+(blue|0)+",1)";
+      }
       var color = "hsl("+(col|0)+",100%,50%)";
       console.log(color);
       game.debug.geom(particle.p, color);
