@@ -41,9 +41,10 @@
 
   function reset(particle) {
     particle.start = game.time.totalElapsedSeconds();
-    particle.hue = Math.random() * 60;
+    var rand = Math.random();
+    particle.hue = (1 - rand) * 60;
     particle.xSide = Math.random() >= 0.5 ? 1 : -1;
-    particle.xOffset = Math.random() * display.width / 3;
+    particle.xOffset = rand * display.width / 3;
     particle.green = Math.random() * 32 + 128;
   }
 
